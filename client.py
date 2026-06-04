@@ -1,34 +1,54 @@
 import socket
+import sys
 
-# 1. Il numero di telefono del tuo PC Mint
-# (Attenzione: mantieni le virgolette singole intorno ai numeri!)
-SERVER_IP = '192.168.1.6'
+# Configurazione di Rete
+SERVER_IP = 'INSERISCI_QUI_IL_TUO_IP'
 PORT = 9999
 
 
 def invia_comando(comando_da_inviare):
+    """Stabilisce la connessione e invia il pacchetto dati al server."""
     try:
-        # 2. Prendiamo il telefono in mano (creiamo il socket client)
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-        # 3. Componiamo il numero e chiamiamo il PC
         client.connect((SERVER_IP, PORT))
-
-        # 4. Parliamo! (Inviamo il messaggio traducendolo in byte)
         client.send(comando_da_inviare.encode('utf-8'))
-
-        # 5. Riagganciamo per chiudere la comunicazione pulita
         client.close()
-
         print(
-            f"✅ Successo! Comando '{comando_da_inviare}' recapitato al quartier generale.")
-
+            f"[+] Trasmesso: Comando '{comando_da_inviare}' inviato con successo.")
     except Exception as e:
-        print(f"❌ Disastro! Impossibile connettersi al PC. Errore: {e}")
-        print("💡 Controlla che l'IP sia corretto e che il server sia acceso.")
+        print(f"[-] Errore critico: Impossibile stabilire la connessione col server.")
+        print(f"    Dettaglio eccezione: {e}")
 
 
 if __name__ == "__main__":
-    print("📱 Avvio del Telecomando Aria...")
-    # 6. Simuliamo la pressione di un tasto sul telecomando
-    invia_comando("NOTIFICA")
+    print("=============================================")
+    print(" INTERFACCIA DI CONTROLLO REMOTO (CLIENT)")
+    print("=============================================")
+
+    while True:
+        print("\nParametri disponibili:")
+        print("1. [Audio] Modifica stato volume (Mute/Unmute)")
+        print("2. [Sicurezza] Blocca sessione di lavoro")
+        print("3. [Test] Trasmetti notifica di sistema")
+        print("4. [Alimentazione] Inizia sequenza di spegnimento (Timer 60s)")
+        print("5. [Alimentazione] Annulla spegnimento in corso")
+        print("0. Termina esecuzione client")
+
+        scelta = input("\nInserire il codice dell'operazione desiderata: ")
+
+        if scelta == "1":
+            invia_comando("MUTA")
+        elif scelta == "2":
+            invia_comando("BLOCCO")
+        elif scelta == "3":
+            invia_comando("NOTIFICA")
+        elif scelta == "4":
+            print("[!] Attenzione: Spegnimento del server programmato tra 60 secondi.")
+            invia_comando("SPEGNI")
+        elif scelta == "5":
+            invia_comando("ANNULLA_SPEGNI")
+        elif scelta == "0":
+            print("[*] Disconnessione effettuata. Chiusura programma.")
+            sys.exit(0)
+        else:
+            print("[-] Input non valido. Selezionare un indice compreso tra 0 e 5.")
