@@ -1,39 +1,41 @@
 import socket
+import subprocess  # La nuova libreria per controllare il sistema operativo!
 
-# 1. Configuriamo la "frequenza radio"
 HOST = '0.0.0.0'
 PORT = 9999
 
+def esegui_azione(comando):
+    print(f"⚙️ Elaborazione del comando: {comando}")
+    
+    if comando == "NOTIFICA":
+        subprocess.run(["notify-send", "📱 Telecomando S25", "Messaggio recapitato!"])
+        print("📣 Notifica sparata a schermo.\n")
+        
+    elif comando == "MUTA":
+        # 'pactl' dice al sistema audio principale (@DEFAULT_SINK@) di fare un toggle (invertire) il mute
+        subprocess.run(["pactl", "set-sink-mute", "@DEFAULT_SINK@", "toggle"])
+        print("🔇 Interruttore audio attivato con successo.\n")
 def avvia_server():
-    # 2. Creiamo la ricetrasmittente (il socket)
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    
-    # 3. Accendiamo e sintonizziamo
     server.bind((HOST, PORT))
-    
-    # 4. Mettiamoci in ascolto
     server.listen(1)
 
     print("=========================================")
-    print(f"📡 Zietta Aria in ascolto sul fisso...")
-    print(f"🎯 Radar acceso sulla porta: {PORT}")
-    print("⏳ Aspetto il segnale...")
+    print(f"📡 Aria in ascolto sul fisso...")
+    print("⏳ Aspetto ordini dal telefono...")
     print("=========================================\n")
 
-    # --- ECCO LA NOVITÀ ---
     while True:
-        # 5. Rispondiamo alla "chiamata" in arrivo
         client, indirizzo = server.accept()
-        print(f"🚨 BOOM! Qualcuno ha bussato dall'indirizzo IP: {indirizzo}")
-
-        # 6. Ascoltiamo il messaggio (pacchetto dati max 1024 byte) e lo traduciamo in testo
         messaggio = client.recv(1024).decode('utf-8')
-        print(f"📩 Comando ricevuto: {messaggio}")
-
-        # 7. Riagganciamo per liberare la linea
+        
+        print(f"🚨 BOOM! Contatto stabilito dall'IP: {indirizzo[0]}")
+        
+        # Invece di stampare solo il messaggio, lo passiamo alla nuova funzione!
+        esegui_azione(messaggio)
+        
         client.close()
-        print("📞 Linea chiusa. Torno a fare la guardia...\n")
 
 if __name__ == "__main__":
     avvia_server()

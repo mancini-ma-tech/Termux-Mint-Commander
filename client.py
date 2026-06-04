@@ -26,6 +26,6 @@ def invia_comando(comando_da_inviare):
         print("💡 Controlla che l'IP sia corretto e che il server sia acceso.")
 
 if __name__ == "__main__":
-    print("📱 Avvio del Telecomando Zietta Aria...")
+    print("📱 Avvio del Telecomando Aria...")
     # 6. Simuliamo la pressione di un tasto sul telecomando
-    invia_comando("CIAO_FISSO_SONO_IL_CLIENT")
+    invia_comando("NOTIFICA")
