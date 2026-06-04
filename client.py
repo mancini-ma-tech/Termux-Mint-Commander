@@ -32,6 +32,7 @@ if __name__ == "__main__":
         print("3. [Test] Trasmetti notifica di sistema")
         print("4. [Alimentazione] Inizia sequenza di spegnimento (Timer 60s)")
         print("5. [Alimentazione] Annulla spegnimento in corso")
+        print("6. [Interazione] Trasmissione Text-to-Speech (Sintesi Vocale)")
         print("0. Termina esecuzione client")
 
         scelta = input("\nInserire il codice dell'operazione desiderata: ")
@@ -47,8 +48,12 @@ if __name__ == "__main__":
             invia_comando("SPEGNI")
         elif scelta == "5":
             invia_comando("ANNULLA_SPEGNI")
+        elif scelta == "6":
+            frase = input("Inserisci la frase da far pronunciare al server: ")
+            # Uniamo il prefisso PARLA: con la frase inserita
+            invia_comando(f"PARLA:{frase}")
         elif scelta == "0":
             print("[*] Disconnessione effettuata. Chiusura programma.")
             sys.exit(0)
         else:
-            print("[-] Input non valido. Selezionare un indice compreso tra 0 e 5.")
+            print("[-] Input non valido. Selezionare un indice compreso tra 0 e 6.")

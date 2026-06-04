@@ -7,8 +7,7 @@ PORT = 9999
 
 
 def esegui_azione(comando):
-    """Elabora e converte le stringhe di comando in esecuzioni di sistema."""
-    print(f"[Sistema] Ricezione direttiva: {comando}")
+    print(f"⚙️ Elaborazione del comando: {comando}")
 
     if comando == "NOTIFICA":
         subprocess.run(["notify-send", "Sistema Remoto",
@@ -33,6 +32,15 @@ def esegui_azione(comando):
         subprocess.run(["notify-send", "Sistema Remoto",
                        "Spegnimento annullato dall'amministratore."])
         print("[-] Operazione: Procedura di spegnimento interrotta.\n")
+
+    # --- LA NOVITÀ: IL PROTOCOLLO FANTASMA ---
+    elif comando.startswith("PARLA:"):
+        # Dividiamo la stringa "PARLA:ciao" in due pezzi e prendiamo solo il "ciao"
+        frase_da_dire = comando.split(":", 1)[1]
+
+        # Facciamo parlare Linux! "-l it" imposta la pronuncia italiana, "-t female1" usa una voce femminile
+        subprocess.run(["spd-say", "-l", "it", "-t", "female1", frase_da_dire])
+        print(f"👻 Il PC ha appena detto ad alta voce: '{frase_da_dire}'\n")
 
     else:
         print("[-] Errore: Direttiva non riconosciuta dal sistema.\n")
